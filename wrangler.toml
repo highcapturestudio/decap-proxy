@@ -30,8 +30,9 @@ name = "highcapturestudio-auth"
 # - https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/workers/configuration/secrets/
-#[vars]
+[vars]
 GITHUB_REPO_PRIVATE = "1"             # Should be set to "1", if your website repo is private
+GITHUB_REPO = "highcapturestudio/HighCaptureStudio_2024"  # owner/repo checked for push access by the /upload endpoint
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#workers-ai
@@ -105,9 +106,12 @@ GITHUB_REPO_PRIVATE = "1"             # Should be set to "1", if your website re
 
 # Bind an R2 Bucket. Use R2 to store arbitrarily large blobs of data, such as files.
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#r2-buckets
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
+# Private bucket — raw video uploads from the CMS land here (see /upload in
+# src/index.ts), and are deleted by the Eleventy build once compressed
+# variants are safely produced in the separate, public hcs-videos bucket.
+[[r2_buckets]]
+binding = "RAW_UPLOADS_BUCKET"
+bucket_name = "hcs-raw-uploads"
 
 # Bind another Worker service. Use this binding to call another Worker without network overhead.
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings

@@ -101,7 +101,11 @@ const handleCallback = async (url: URL, env: Env) => {
 const UPLOAD_CORS_HEADERS = {
 	'Access-Control-Allow-Origin': '*',
 	'Access-Control-Allow-Methods': 'POST, OPTIONS',
-	'Access-Control-Allow-Headers': 'Authorization, X-Filename',
+	// Content-Type is required here even though the Worker itself never reads
+	// it: fetch() auto-sets it from the File's own MIME type when a File is
+	// passed as the body (see admin/video-upload-widget.js), which makes it
+	// part of the browser's CORS preflight request whether we want it or not.
+	'Access-Control-Allow-Headers': 'Authorization, Content-Type, X-Filename',
 };
 
 // Accepts a raw video file from the (already GitHub-logged-in) Decap CMS
